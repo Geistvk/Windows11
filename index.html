@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 11</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+            background-image: url(Windows_background.jpg);
+            background-size: 100%;
+        }
+
+        .task_bar {
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            z-index: 10;
+            color: white;
+            background: linear-gradient(to right, rgb(1, 1, 68) 0%, rgb(0, 52, 70) 50%, rgb(1, 1, 68) 100%);
+        }
+
+        .taskbar_app {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px; 
+            height: 40px;
+            border-radius: 5px;
+        }
+        .taskbar_app:hover, .time_display:hover, .info_display:hover {
+            cursor: pointer;
+            background-color: rgba(112, 112, 112, 0.582);
+        }
+        .right_display {
+            position: absolute;
+            font-size: 90%;
+            width: 200px;
+            height: 40px;
+            border-radius: 5px;
+            display: flex;
+            right: -40px;
+        }
+        .info_display {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 70px;
+            height: 40px;
+            border-radius: 5px;
+            
+        }
+        button {
+            background-color: transparent;
+            border: none;
+        }
+        [popover] {
+            border: none;
+        }
+        .time_display {
+            position: relative;
+            width: 80px;
+            height: 40px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            right: 0%;
+        } 
+        .device_volume, .device_network {
+            filter: invert(100%);
+            position: relative;
+            transform: translateY(1px);
+        }
+        .time, .date {
+            text-align: right;
+            width: 100%;
+        }
+
+
+        .device_controls {
+            position: absolute;
+            z-index: 16;
+            right: -83%;
+            bottom: -580px;
+            width: 300px;
+            height: 250px;
+            background-color: #262626;
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 6px rgba(0, 0, 0, 0.3);
+        }
+        .device_controls_main {
+            position: relative;
+            background-color: #262626;
+            width: 100%;
+            height: 210px;
+        }
+        .device_controls_taskbar {
+            position: relative;
+            display: flex;
+            justify-content: right;
+            align-items: center;
+            background-color: #191919;
+            width: 110%;
+            transform: translateX(-20px);
+            height: 45px;
+        }
+        .device_controls_icon_settings, .device_controls_icon_edit {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translateX(-10px);
+            border-radius: 5px;
+            width: 35px;
+            height: 35px;
+            filter: invert(100%);
+        }
+        .device_controls_icon_settings:hover, .device_controls_icon_edit:hover {
+            cursor: pointer;
+            background-color: rgba(78, 78, 78, 0.3);
+        }
+
+
+
+
+        .App {
+            display: none;
+            position: absolute;
+            background-color: #262626;
+            z-index: 10;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 500px;
+            height: 500px;
+            resize: both;
+            min-width: 100px;
+            min-height: 100px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            user-select: none;
+        }
+        .main_app_cont {
+            position: absolute;
+            background-color: #262626;
+            width: 500px;
+            height: 500px;
+            border-radius: 10px;
+        }
+        .App_title {
+            position: absolute;
+            color: white;
+            left: 20px;
+        }
+        .resize-handle {
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            cursor: se-resize;
+        }
+        .navbar {
+            display: flex;
+            justify-content: right;
+            align-items: center;
+            width: 100%;
+            height: 20px;
+            background-color: #191919;
+        }
+        .app_navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+            color: white;
+            width: 40px;
+            height: 20px;
+        }
+        #minimize:hover {
+            cursor: pointer;
+            background-color: rgb(112, 112, 112);
+        }
+        #close:hover {
+            cursor: pointer;
+            background-color: rgb(179, 0, 0);
+        }
+
+
+
+
+
+
+        .windows_main_menu {
+            position: fixed;
+            bottom: -180px;
+            width: 600px;
+            height: 650px;
+            border-radius: 15px;
+            z-index: 15;
+            background-color: #262626;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .windows_main_menu_taskbar {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            transform: translateX(-10px);
+            bottom: 0;
+            width: 110%;
+            height: 80px;
+            color: white;
+            background-color: #191919;
+        }
+        .user {
+            display: flex;
+            align-items: center;
+            width: auto;
+            height: 40px;
+            border-radius: 5px;
+            margin-left: 60px;
+        }
+        .user:hover, .power:hover {
+            cursor: pointer;
+            background-color: rgb(88, 88, 88);
+        }
+        .user_icon {
+            width: 30px;
+            filter: invert(1);
+        }
+        .power {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translateX(1300%);
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+        }
+        .power_icon {
+            width: 20px;
+            height: 20px;
+            filter: invert(1);
+        }
+
+        .power_options {
+            position: fixed;
+            bottom: -615px;
+            left: 24%;
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(53, 53, 53);
+            width: 150px;
+            height: 80px;
+            border-radius: 10px;
+            z-index: 20;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .power_option {
+            text-align: center;
+            color: white;
+            width: 95%;
+            height: 25px;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+        .power_option:hover {
+            cursor: pointer;
+            background-color: rgb(58, 58, 58);
+        }
+        abbr {
+            text-decoration: none;
+        }
+        .power_option_logo {
+            position: relative;
+            width: 30px;
+            filter: invert(100%);
+        }
+
+
+
+
+
+
+ 
+        .windows_logo {
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .windows_gap {
+            display: grid;
+            grid-template-areas:
+                'part1 part2'
+                'part3 part4';
+            place-items: center;
+            gap: 1px;
+            width: 30px;
+            height: 30px;
+        }
+
+        .windows_logo_part {
+            position: relative;
+            background-color: rgb(0, 120, 215); 
+            width: 15px; 
+            height: 15px; 
+        }
+
+        .windows_logo_part1 {
+            grid-area: part1;
+            border-radius: 4px 0 0 0;
+        }
+
+        .windows_logo_part2 {
+            grid-area: part2;
+            border-radius: 0 4px 0 0;
+        }
+
+        .windows_logo_part3 {
+            grid-area: part3;
+            border-radius: 0 0 0 4px;
+        }
+
+        .windows_logo_part4 {
+            grid-area: part4;
+            border-radius: 0 0 4px 0;
+        }
+
+
+        /*Search Bar*/
+        .search_bar {
+            width: 200px;
+            height: 30px;
+            border-radius: 25px;
+            border: none;
+            text-align: center;
+            background-color: rgba(215, 215, 215, 0.55);
+            color: white;
+        }
+        .search_bar:hover {
+            background-color: rgba(215, 215, 215, 0.4);
+        }
+        .search_icon, .bing_icon {
+            position: absolute;
+            z-index: 11;
+        }
+        .search_icon {
+            position: absolute;
+            transform: translateX(5px) translateY(6px);
+        }
+        .bing_icon {
+            background-color: transparent;
+            text-decoration: none;
+            color: black;
+            border-radius: 5px;
+            transform: translateX(-25px) translateY(8px);
+        }
+
+
+
+
+        .multi_desktop_icon {
+            width: 40px;
+            height: 40px;
+        }
+        .screen1 {
+            position: absolute;
+            transform: translateY(80%) translateX(5px);
+            width: 21px;
+            height: 18px;
+            border-radius: 3px;
+            color: transparent;
+            background-color: rgb(83, 83, 83);
+        }
+        .screen2 {
+            position: absolute;
+            transform: translateY(45%) translateX(11px);
+            width: 21px;
+            height: 18px;
+            border-radius: 3px;
+            color: transparent;
+            background-color: rgba(216, 216, 216, 0.7);
+        }
+
+        .folder_app {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .shutting_down, .restart, .sleep {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            color: white;
+            z-index: 20;
+        }
+        .loader {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            transform: translateY(45%) translateX(45%);
+        }
+        .loader_circle {
+            filter: invert(100%);
+        }
+        @keyframes loading {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
+
+
+
+        .gambling_main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: gray;
+            border-radius: 10px;
+            width: 100%;
+            height: 50px;
+        }
+
+        .box:hover {
+            cursor: pointer;
+            background-color: rgb(90, 90, 90);
+        }
+    </style>
+</head>
+
+<body>
+    <div popover id="device_controls" class="device_controls">
+        <div class="device_controls_main">-</div>
+
+        <div class="device_controls_taskbar">
+
+            <div class="device_controls_icon_edit">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"/></svg>
+            </div>
+
+            <div class="device_controls_icon_settings" onclick="openApp('settings_app')">
+                <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512"><path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"/></svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="shutting_down" style="display: none;" id="Shutdown">
+        <div class="loader">
+            <svg class="loader_circle" id="loader_shutdown" xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 512 512"><path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>
+            <h2>Herunterfahren</h2>
+        </div>
+    </div>
+
+    <div class="restart" style="display: none;" id="Restart">
+        <div class="loader">
+            <svg class="loader_circle_restart loader_circle" id="loader_restart" xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 512 512"><path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>
+            <h2>Neustarten</h2>
+        </div>
+    </div>
+
+    <div class="sleep" style="display: none;" id="Sleep">
+        <div class="loader">
+            <svg class="loader_circle_sleep loader_circle" id="loader_sleep" xmlns="http://www.w3.org/2000/svg" height="100" width="100" viewBox="0 0 512 512"><path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>
+            <h2>Energie sparen</h2>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="settings_app resizable draggable App" id="settings_app" onclick="bringToFront('settings_app')">
+        <div class="navbar">
+            <p class="App_title">Einstellungen</p>
+            <p class="app_navbar" id="minimize" onclick="minimize('settings_app')">-</p>
+            <p class="app_navbar" id="close" onclick="closeApp('settings_app')">x</p>
+        </div>
+        <div class="resize-handle"></div>
+        <div class="settings_main main_app_cont">-</div>
+    </div>
+
+
+
+    <div class="folders_app resizable draggable App" id="folders_app" style="display: none;" onclick="bringToFront('folders_app')">
+        <div class="navbar">
+            <p class="App_title">Dateien</p>
+            <p class="app_navbar" id="minimize" onclick="minimize('folders_app')">-</p>
+            <p class="app_navbar" id="close" onclick="closeApp('folders_app')">x</p>
+        </div>
+        <div class="resize-handle"></div>
+        <div class="folders_main main_app_cont">-</div>
+    </div>
+
+
+
+    <div class="browser_app resizable draggable App" id="browser_app" style="display: none;" onclick="bringToFront('browser_app')">
+        <div class="navbar">
+            <p class="App_title">Chrome</p>
+            <p class="app_navbar" id="minimize" onclick="minimize('browser_app')">-</p>
+            <p class="app_navbar" id="close" onclick="closeApp('browser_app')">x</p>
+        </div>
+        <div class="resize-handle"></div>
+        <div class="browser_main main_app_cont">-</div>
+    </div>
+
+
+    <div class="gambling_app resizable draggable App" id="gambling_app" style="display: none;" onclick="bringToFront('gambling_app')">
+        <div class="navbar">
+            <p class="App_title">Glückspiele App</p>
+            <p class="app_navbar" id="minimize" onclick="minimize('gambling_app')">-</p>
+            <p class="app_navbar" id="close" onclick="closeApp('gambling_app')">x</p>
+        </div>
+        <div class="resize-handle"></div>
+
+
+        <div class="gambling_main main_app_cont">
+            <div class="option_1 box">
+                <h2>Blackjack</h2>
+            </div>
+
+            <div class="option_2 box">
+                <h2>Poker</h2>
+            </div>
+
+            <div class="option_3 box">
+                <h2>Bet</h2>
+            </div>
+
+            <div class="option_4 box">
+                <h2>Horse race</h2>
+            </div>
+
+            <div class="option_5 box">
+                <h2>Dog race</h2>
+            </div>
+
+            <div class="option_6 box">
+                <h2>Roulette</h2>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+
+
+
+    <div class="windows_main_menu" id="windows_main_menu" popover>
+        <div class="windows_main_menu_taskbar">
+            <div class="user">
+                <svg class="user_icon" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
+                <p contenteditable="true" class="user_name">User</p>
+            </div>
+
+            <button class="power" popovertargetaction popovertarget="powerOptions">
+                <svg class="power_icon" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"/></svg>
+            </button>
+        </div>
+    </div>
+
+
+
+    <div class="power_options" popover id="powerOptions">
+        <div class="energie_sparen power_option" onclick="Power('Sleep', 'loader_sleep')"><abbr title="PC in Ruhemodus setzen"><svg class="power_option_logo" xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512"><path d="M144.7 98.7c-21 34.1-33.1 74.3-33.1 117.3c0 98 62.8 181.4 150.4 211.7c-12.4 2.8-25.3 4.3-38.6 4.3C126.6 432 48 353.3 48 256c0-68.9 39.4-128.4 96.8-157.3zm62.1-66C91.1 41.2 0 137.9 0 256C0 379.7 100 480 223.5 480c47.8 0 92-15 128.4-40.6c1.9-1.3 3.7-2.7 5.5-4c4.8-3.6 9.4-7.4 13.9-11.4c2.7-2.4 5.3-4.8 7.9-7.3c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-3.7 .6-7.4 1.2-11.1 1.6c-5 .5-10.1 .9-15.3 1c-1.2 0-2.5 0-3.7 0c-.1 0-.2 0-.3 0c-96.8-.2-175.2-78.9-175.2-176c0-54.8 24.9-103.7 64.1-136c1-.9 2.1-1.7 3.2-2.6c4-3.2 8.2-6.2 12.5-9c3.1-2 6.3-4 9.6-5.8c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-3.6-.3-7.1-.5-10.7-.6c-2.7-.1-5.5-.1-8.2-.1c-3.3 0-6.5 .1-9.8 .2c-2.3 .1-4.6 .2-6.9 .4z"/></svg> Energie sparen</abbr></div>
+        <div class="Shutdown power_option" onclick="Power('Shutdown', 'loader_shutdown')"><abbr title="PC Herunterfahren"><svg class="power_option_logo" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z"/></svg> Herunterfahren</abbr></div>
+        <div class="Restart power_option" onclick="Power('Restart', 'loader_restart')"><abbr title="PC Neustarten">Neustarten</abbr></div>
+    </div>
+
+
+
+
+    <div class="task_bar">
+        <button class="windows_logo taskbar_app" popovertargetaction popovertarget="windows_main_menu">
+            <div class="windows_gap">
+                <div class="windows_logo_part windows_logo_part1"></div>
+                <div class="windows_logo_part windows_logo_part2"></div>
+                <div class="windows_logo_part windows_logo_part3"></div>
+                <div class="windows_logo_part windows_logo_part4"></div>
+            </div>
+        </button>
+
+        <div class="search">
+            <div class="search_icon"><abbr title="Suche"><svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg></abbr></div> 
+            <input type="text" class="search_bar" placeholder="Suche">
+            <a href="https://www.bing.com/search?form=WSBCTB&adlt=strict&toWww=1&redig=9205895E834E436981B34C60BEF11995&q=Was+kann+der+neue+Bing-Chat%3f&showconv=1" target="_blank" class="bing_icon"><abbr title="Mit KI suchen"><img src="https://www.bing.com/s/a/bing_p.ico" alt="Bing Search Icon" style="background: transparent;"></abbr></a>
+        </div>
+
+        <div class="multi_desktop taskbar_app">
+            <div class="multi_desktop_icon">
+                <div class="screen1">_</div>
+                <div class="screen2">_</div>
+            </div>
+        </div>
+
+        <div class="settings_app_icon taskbar_app" onclick="openApp('settings_app')">
+            <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 512 512"><path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"/></svg>
+        </div>
+
+        <div class="folder_app_icon taskbar_app" onclick="openApp('folders_app')">
+            <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 512 512"><path d="M0 96C0 60.7 28.7 32 64 32H196.1c19.1 0 37.4 7.6 50.9 21.1L289.9 96H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V160c0-8.8-7.2-16-16-16H286.6c-10.6 0-20.8-4.2-28.3-11.7L213.1 87c-4.5-4.5-10.6-7-17-7H64z"/></svg>
+        </div>
+
+        <div class="browser_app_icon taskbar_app" onclick="openApp('browser_app')">
+            <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 512 512"><path d="M0 256C0 209.4 12.5 165.6 34.3 127.1L144.1 318.3C166 357.5 207.9 384 256 384C270.3 384 283.1 381.7 296.8 377.4L220.5 509.6C95.9 492.3 0 385.3 0 256zM365.1 321.6C377.4 302.4 384 279.1 384 256C384 217.8 367.2 183.5 340.7 160H493.4C505.4 189.6 512 222.1 512 256C512 397.4 397.4 511.1 256 512L365.1 321.6zM477.8 128H256C193.1 128 142.3 172.1 130.5 230.7L54.2 98.5C101 38.5 174 0 256 0C350.8 0 433.5 51.5 477.8 128V128zM168 256C168 207.4 207.4 168 256 168C304.6 168 344 207.4 344 256C344 304.6 304.6 344 256 344C207.4 344 168 304.6 168 256z"/></svg>
+        </div>
+
+        <div class="gambling_app_icon taskbar_app" onclick="openApp('gambling_app')">
+            <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 640 512"><path d="M274.9 34.3c-28.1-28.1-73.7-28.1-101.8 0L34.3 173.1c-28.1 28.1-28.1 73.7 0 101.8L173.1 413.7c28.1 28.1 73.7 28.1 101.8 0L413.7 274.9c28.1-28.1 28.1-73.7 0-101.8L274.9 34.3zM200 224a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM96 200a24 24 0 1 1 0 48 24 24 0 1 1 0-48zM224 376a24 24 0 1 1 0-48 24 24 0 1 1 0 48zM352 200a24 24 0 1 1 0 48 24 24 0 1 1 0-48zM224 120a24 24 0 1 1 0-48 24 24 0 1 1 0 48zm96 328c0 35.3 28.7 64 64 64H576c35.3 0 64-28.7 64-64V256c0-35.3-28.7-64-64-64H461.7c11.6 36 3.1 77-25.4 105.5L320 413.8V448zM480 328a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg>
+        </div>
+
+
+
+
+
+
+
+        <div class="right_display">
+            <button class="info_display" popovertargetaction popovertarget="device_controls">
+                <div class="device_network">
+                    <abbr title="Netzwerk"><svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 640 512"><path d="M54.2 202.9C123.2 136.7 216.8 96 320 96s196.8 40.7 265.8 106.9c12.8 12.2 33 11.8 45.2-.9s11.8-33-.9-45.2C549.7 79.5 440.4 32 320 32S90.3 79.5 9.8 156.7C-2.9 169-3.3 189.2 8.9 202s32.5 13.2 45.2 .9zM320 256c56.8 0 108.6 21.1 148.2 56c13.3 11.7 33.5 10.4 45.2-2.8s10.4-33.5-2.8-45.2C459.8 219.2 393 192 320 192s-139.8 27.2-190.5 72c-13.3 11.7-14.5 31.9-2.8 45.2s31.9 14.5 45.2 2.8c39.5-34.9 91.3-56 148.2-56zm64 160a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z"/></svg></abbr>
+                </div>
+
+                <div class="device_volume">
+                    <abbr title="Lautstärke"><svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 640 512"><path d="M533.6 32.5C598.5 85.2 640 165.8 640 256s-41.5 170.7-106.4 223.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C557.5 398.2 592 331.2 592 256s-34.5-142.2-88.7-186.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zM473.1 107c43.2 35.2 70.9 88.9 70.9 149s-27.7 113.8-70.9 149c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C475.3 341.3 496 301.1 496 256s-20.7-85.3-53.2-111.8c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zm-60.5 74.5C434.1 199.1 448 225.9 448 256s-13.9 56.9-35.4 74.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C393.1 284.4 400 271 400 256s-6.9-28.4-17.7-37.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zM301.1 34.8C312.6 40 320 51.4 320 64V448c0 12.6-7.4 24-18.9 29.2s-25 3.1-34.4-5.3L131.8 352H64c-35.3 0-64-28.7-64-64V224c0-35.3 28.7-64 64-64h67.8L266.7 40.1c9.4-8.4 22.9-10.4 34.4-5.3z"/></svg></abbr>
+                </div>
+            </button>
+
+            <div class="time_display">
+                <div class="time"></div>
+                <div class="date"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        function updateTime() {
+            const timeElement = document.querySelector('.time');
+            const dateElement = document.querySelector('.date');
+
+            const d = new Date();
+            const year = d.getFullYear();
+
+            const month = padZero(d.getMonth() + 1);
+            const day = padZero(d.getDate());
+            const hour = padZero(d.getHours());
+            const minute = padZero(d.getMinutes());
+
+            dateElement.innerHTML = `${day}.${month}.${year}`;
+            timeElement.innerHTML = `${hour}:${minute}`;
+        }
+
+        function padZero(value) {
+            return value < 10 ? '0' + value : value;
+        }
+
+        setInterval(updateTime, 10);
+
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------
+        let zIndexCounter = 10; // Startwert für Z-Index
+
+        function bringToFront(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.zIndex = ++zIndexCounter;
+        }
+
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------
+        let isDragging = false;
+        let startX, startY;
+        let selection;
+
+        document.addEventListener('mousedown', (event) => {
+            if (event.button === 0) { 
+                isDragging = true;
+                startX = event.clientX;
+                startY = event.clientY;
+
+                if (selection) {
+                    document.body.removeChild(selection);
+                }
+
+                selection = document.createElement('div');
+                selection.style.position = 'absolute';
+                selection.style.background = 'rgba(46, 78, 185, 0.5)';
+                selection.style.zIndex = '2';
+                document.body.appendChild(selection);
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+
+                if (selection) {
+                    document.body.removeChild(selection);
+                    selection = null;
+                }
+
+            }
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            if (isDragging) {
+                const endX = event.clientX;
+                const endY = event.clientY;
+
+                const width = Math.abs(endX - startX);
+                const height = Math.abs(endY - startY);
+
+                const left = Math.min(startX, endX);
+                const top = Math.min(startY, endY);
+
+                selection.style.left = left + 'px';
+                selection.style.top = top + 'px';
+                selection.style.width = width + 'px';
+                selection.style.height = height + 'px';
+            }
+        });
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        function Power(loaderWindowId, loaderId) {
+            const shutdown_loader = document.getElementById(loaderWindowId);
+            const loader = document.getElementById(loaderId);
+
+            let min = 10;
+            let max = 50;
+            let shutdown_random = Math.floor(Math.random() * (max - min + 1)) + min;
+            let time_wait_shutdown = shutdown_random * 1000;
+
+            loader.style.animation = `loading 2s linear infinite`;
+
+            shutdown_loader.style.display = 'block';
+
+            setTimeout(function() {
+                loader.style.animation = 'none';
+                shutdown_loader.style.display = 'none';
+            }, time_wait_shutdown);
+        }
+
+
+
+        function openWindows() {
+            const main_menu = document.querySelector('.windows_main_menu');
+
+            if (main_menu.style.display === 'none' || main_menu.style.display === '') {
+                main_menu.style.display = 'block';
+            } else {
+                main_menu.style.display = 'none';
+            }
+        }
+
+        function openPowerOptions() {
+            const power_options = document.querySelector('.power_options');
+
+            if (power_options.style.display === 'none' || power_options.style.display === '') {
+                power_options.style.display = 'block';
+            } else {
+                power_options.style.display = 'none';
+            }
+        }
+
+        function openApp(appId) {
+            const app = document.getElementById(appId);
+            if (app) {
+                app.style.display = 'block';
+                enableDragging(app, app.querySelector('.navbar'));
+                enableResizing(app);
+                bringToFront(app);
+            }
+        }
+
+        function minimize(appId) {
+            const app = document.getElementById(appId);
+            if (app) {
+                app.style.display = 'none';
+            }
+        }
+
+        function closeApp(appId) {
+            const app = document.getElementById(appId);
+            if (app) {
+                app.style.display = 'none';
+            }
+        }
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        let dragHandle;
+        let resizeHandle1;
+
+        function enableDragging(element, dragHandle) {
+            dragHandle.addEventListener('mousedown', (event) => {
+                if (event.target.id !== 'minimizeSettings' && event.target.id !== 'closeSettings') {
+                    isDragging = true;
+                    startX = event.clientX;
+                    startY = event.clientY;
+                    startLeft = element.offsetLeft;
+                    startTop = element.offsetTop;
+
+                    document.addEventListener('mousemove', handleMouseMove);
+                    document.addEventListener('mouseup', () => {
+                        isDragging = false;
+                        document.removeEventListener('mousemove', handleMouseMove);
+                    });
+                }
+            });
+
+            function handleMouseMove(event) {
+                if (isDragging) {
+                    const deltaX = event.clientX - startX;
+                    const deltaY = event.clientY - startY;
+
+                    element.style.left = `${Math.max(0, startLeft + deltaX)}px`;
+                    element.style.top = `${Math.max(0, startTop + deltaY)}px`;
+                }
+            }
+        }
+
+        function enableResizing(element) {
+            let resizeHandle = document.createElement('div');
+            resizeHandle.classList.add('resize-handle');
+            element.appendChild(resizeHandle);
+
+            let isResizing = false;
+            let startX, startY;
+            let startWidth, startHeight;
+
+            resizeHandle.addEventListener('mousedown', (event) => {
+                isResizing = true;
+                startX = event.clientX;
+                startY = event.clientY;
+                startWidth = element.offsetWidth;
+                startHeight = element.offsetHeight;
+
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', () => {
+                    isResizing = false;
+                    document.removeEventListener('mousemove', handleMouseMove);
+                });
+            });
+
+            function handleMouseMove(event) {
+                if (isResizing) {
+                    const newWidth = startWidth + (event.clientX - startX);
+                    const newHeight = startHeight + (event.clientY - startY);
+
+                    element.style.width = `${Math.max(100, newWidth)}px`;
+                    element.style.height = `${Math.max(100, newHeight)}px`;
+                }
+            }
+        }
+
+        const draggableElements = document.querySelectorAll('.draggable');
+        draggableElements.forEach((element) => {
+            const dragHandle = element.querySelector('.navbar');
+            enableDragging(element, dragHandle);
+            enableResizing(element);
+        });
+
+
+        function minimizeSettings() {
+            const settingsApp = document.querySelector('.settings_app');
+            settingsApp.style.display = 'none';
+        }
+
+        function closeSettings() {
+            const settingsApp = document.querySelector('.settings_app');
+            settingsApp.style.display = 'none';
+            console.log('Einstellungen wurden geschlossen.');
+        }
+
+        function openSettings() {
+            const settingsApp = document.querySelector('.settings_app');
+            settingsApp.style.display = 'block';
+            console.log('Einstellungen wurden geöffnet.');
+        }
+
+
+
+        let resizeHandle;
+
+        function enableResizing(element) {
+            resizeHandle = document.createElement('div');
+            resizeHandle.classList.add('resize-handle');
+            element.appendChild(resizeHandle);
+
+            let isResizing = false;
+            let startX, startY;
+            let startWidth, startHeight;
+
+            resizeHandle.addEventListener('mousedown', (event) => {
+                isResizing = true;
+                startX = event.clientX;
+                startY = event.clientY;
+                startWidth = element.offsetWidth;
+                startHeight = element.offsetHeight;
+
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', () => {
+                    isResizing = false;
+                    document.removeEventListener('mousemove', handleMouseMove);
+                });
+            });
+
+            function handleMouseMove(event) {
+                if (isResizing) {
+                    const newWidth = startWidth + (event.clientX - startX);
+                    const newHeight = startHeight + (event.clientY - startY);
+
+                    element.style.width = `${Math.max(100, newWidth)}px`;
+                    element.style.height = `${Math.max(100, newHeight)}px`;
+                }
+            }
+        }
+
+        const resizableElements = document.querySelectorAll('.resizable');
+        resizableElements.forEach((element) => {
+            enableDragging(element);
+            enableResizing(element);
+        });
+
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------------------
+        /*function openApp(filePath) {
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200 || xhr.status === 0) { 
+                        document.querySelector('.app_cont').innerHTML = xhr.responseText;
+                    } else {
+                        console.error('Error loading app:', xhr.statusText);
+                    }
+                }
+            };
+
+            xhr.open('GET', filePath, true);
+            xhr.send();
+        }*/
+
+        function generateAppContainer() {
+            const appContainer = document.createElement('div');
+            appContainer.classList.add('app');
+
+            const navbar = document.createElement('div');
+            navbar.classList.add('navbar');
+
+            const minimizeButton = document.createElement('p');
+            minimizeButton.classList.add('app_navbar');
+            minimizeButton.innerText = '-';
+
+            const closeButton = document.createElement('p');
+            closeButton.classList.add('app_navbar');
+            closeButton.innerText = 'x';
+
+            navbar.appendChild(minimizeButton);
+            navbar.appendChild(closeButton);
+
+            const appContent = document.createElement('div');
+            appContent.classList.add('app_cont');
+
+            appContainer.appendChild(navbar);
+            appContainer.appendChild(appContent);
+
+            return appContainer;
+        }
+
+
+
+    </script>
+</body>
+
+</html>
